@@ -10,6 +10,7 @@ from gi.repository import Gdk, GdkPixbuf, GLib, GObject, Gtk, Pango
 
 from . import util
 from .common import IconButton, IconToggleButton, SpinnerImage
+from .common.rating_button import RatingButtonBox
 from .state import RepeatType
 from ..adapters import AdapterManager, Result, SongCacheStatus
 from ..adapters.api_objects import Song
@@ -56,10 +57,12 @@ class PlayerControls(Gtk.ActionBar):
         song_display = self.create_song_display()
         playback_controls = self.create_playback_controls()
         play_queue_volume = self.create_play_queue_volume()
+        self.create_rating_buttons()
 
         self.last_device_list_update = None
 
         self.pack_start(song_display)
+        self.pack_start(self.rating_buttons_box)
         self.set_center_widget(playback_controls)
         self.pack_end(play_queue_volume)
 
@@ -660,6 +663,11 @@ class PlayerControls(Gtk.ActionBar):
         box.add(buttons)
 
         return box
+
+    def create_rating_buttons(self):
+        # Rating button
+        self.rating_buttons_box = RatingButtonBox("player")
+        self.rating_buttons_box.set_property("sensitive", True)
 
     def create_play_queue_volume(self) -> Gtk.Box:
         vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
