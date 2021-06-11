@@ -480,6 +480,13 @@ class Adapter(abc.ABC):
         """
         return False
 
+    @property
+    def can_set_rating(self) -> bool:
+        """
+        Whether or not the adapter supports :class:`set_rating`.
+        """
+        return False
+
     # Artists
     @property
     def supported_artist_query_types(self) -> Set[AlbumSearchQuery.Type]:
@@ -687,6 +694,12 @@ class Adapter(abc.ABC):
         :params song: The :class:`sublime_music.adapters.api_objects.Song` to scrobble.
         """
         raise self._check_can_error("scrobble_song")
+
+    def set_rating(self, item_id: str, rating: int):
+        """
+        Rate the given item (can be song, album, artist, etc.)
+        """
+        raise self._check_can_error("set_rating")
 
     def get_artists(self) -> Sequence[Artist]:
         """

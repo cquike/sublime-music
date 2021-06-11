@@ -800,6 +800,19 @@ class AdapterManager:
             )
 
     @staticmethod
+    def can_set_rating() -> bool:
+        return AdapterManager._ground_truth_can_do("set_rating")
+
+    @staticmethod
+    def set_rating(item_id: str, rating: int):
+        # TODO: Use async for this
+        assert AdapterManager._instance
+        ground_truth_adapter = AdapterManager._instance.ground_truth_adapter
+        if AdapterManager._offline_mode and ground_truth_adapter.is_networked:
+            raise AssertionError("You cannot rate in offline mode")
+        ground_truth_adapter.set_rating(item_id, rating)
+
+    @staticmethod
     def _get_networked_scheme() -> str:
         assert AdapterManager._instance
         networked_scheme_priority = ("https", "http")

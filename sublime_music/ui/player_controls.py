@@ -32,6 +32,7 @@ class PlayerControls(Gtk.ActionBar):
             GObject.TYPE_NONE,
             (int, object, object),
         ),
+        "song-rated": (GObject.SignalFlags.RUN_FIRST, GObject.TYPE_NONE, (int,)),
         "songs-removed": (GObject.SignalFlags.RUN_FIRST, GObject.TYPE_NONE, (object,)),
         "refresh-window": (
             GObject.SignalFlags.RUN_FIRST,
@@ -42,7 +43,7 @@ class PlayerControls(Gtk.ActionBar):
     editing: bool = False
     editing_play_queue_song_list: bool = False
     reordering_play_queue_song_list: bool = False
-    current_song = None
+    current_song = None  # TODO: Not used?
     current_device = None
     current_playing_index: Optional[int] = None
     current_play_queue: Tuple[str, ...] = ()
@@ -172,6 +173,7 @@ class PlayerControls(Gtk.ActionBar):
                 app_config.state.current_song.cover_art,
                 order_token=self.cover_art_update_order_token,
             )
+            self.update_rating(app_config.state.current_song.user_rating or 0)
 
             self.song_title.set_markup(
                 bleach.clean(app_config.state.current_song.title)
@@ -363,6 +365,12 @@ class PlayerControls(Gtk.ActionBar):
 
         self.album_art.set_from_file(cover_art_filename)
         self.album_art.set_loading(False)
+
+    def update_rating(self, rating: int):
+        self.rating_buttons_box.rating = rating
+
+    def on_rating_clicked(self, _, rating: int):
+        self.emit("song-rated", rating)
 
     def update_scrubber(
         self,
@@ -668,6 +676,7 @@ class PlayerControls(Gtk.ActionBar):
         # Rating button
         self.rating_buttons_box = RatingButtonBox("player")
         self.rating_buttons_box.set_property("sensitive", True)
+        self.rating_buttons_box.connect("rating-clicked", self.on_rating_clicked)
 
     def create_play_queue_volume(self) -> Gtk.Box:
         vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)

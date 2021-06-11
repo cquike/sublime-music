@@ -326,6 +326,7 @@ class SubsonicAdapter(Adapter):
     can_get_song_file_uri = True
     can_get_song_stream_uri = True
     can_scrobble_song = True
+    can_set_rating = True
     can_search = True
     can_stream = True
     can_update_playlist = True
@@ -743,6 +744,18 @@ class SubsonicAdapter(Adapter):
 
     def get_play_queue(self) -> Optional[API.PlayQueue]:
         return self._get_json(self._make_url("getPlayQueue")).play_queue
+
+    def set_rating(self, item_id: str, rating: int):
+        """
+        Sets the rating for a music file.
+
+        Calls the endpoint described in http://www.subsonic.org/pages/api.jsp#setRating
+
+        :param item_id: A string which uniquely identifies the file (song) or folder (album/artist)
+                          to rate.
+        :param rating: The rating between 1 and 5 (inclusive), or 0 to remove the rating.
+        """
+        return self._get_json(self._make_url("setRating"), id=item_id, rating=rating)
 
     def save_play_queue(
         self,
