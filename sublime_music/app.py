@@ -3,6 +3,7 @@ import os
 import random
 import shutil
 import sys
+from concurrent.futures import Future
 from datetime import timedelta
 from functools import partial
 from pathlib import Path
@@ -174,6 +175,7 @@ class SublimeMusicApp(Gtk.Application):
         self.window.connect("go-to", self.on_window_go_to)
         self.window.connect("key-press-event", self.on_window_key_press)
         self.window.player_controls.connect("song-scrub", self.on_song_scrub)
+        self.window.player_controls.connect("song-rated", self.on_current_song_rated)
         self.window.player_controls.connect("device-update", self.on_device_update)
         self.window.player_controls.connect("volume-change", self.on_volume_change)
 
@@ -870,6 +872,28 @@ class SublimeMusicApp(Gtk.Application):
             self.player_manager.seek(new_time)
 
         self.save_play_queue()
+
+    def on_current_song_rated(self, _, rating: int):
+        current_song = self.app_config.state.current_song
+        if not current_song:
+            return
+
+        def on_done(future: Future):
+            """Make we update the UI after a failed or successful rating"""
+            if future.cancelled():
+                return
+            exception = future.exception(timeout=1.0)
+            if exception:
+                self.app_config.state.current_notification = UIState.UINotification(
+                    markup="<b>Unable to rate song.</b>",
+                    icon="dialog-error",
+                )
+                self.update_window()
+            elif self.window:
+                self.window.player_controls.update_rating(rating)
+
+        current_song.user_rating = rating
+        AdapterManager.set_song_rating(current_song, rating).add_done_callback(on_done)
 
     def on_device_update(self, _, device_id: str):
         if device_id == self.app_config.state.current_device:
