@@ -746,7 +746,7 @@ class SubsonicAdapter(Adapter):
         return self._get_json(self._make_url("getPlayQueue")).play_queue
 
     def set_rating(self, item_id: str, rating: int):
-        return self._get_json(self._make_url("setRating"), id=item_id, rating=rating)
+        self._get_json(self._make_url("setRating"), id=item_id, rating=rating)
 
     def save_play_queue(
         self,

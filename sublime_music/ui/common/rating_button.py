@@ -43,11 +43,11 @@ class RatingButtonBox(Gtk.Box):
 
     def __init__(
         self,
-        action_prefix,
-        icon_rated="star-full",
-        icon_hover="half-empty-star",
-        icon_unrated="star-empty",
-        icon_unset_rating="star-crossed",
+        action_prefix: str,
+        icon_rated: str = "star-full",
+        icon_hover: str = "half-empty-star",
+        icon_unrated: str = "star-empty",
+        icon_unset_rating: str = "star-crossed",
         **kwargs
     ):
         kwargs["orientation"] = kwargs.get("orientation", Gtk.Orientation.HORIZONTAL)
@@ -76,11 +76,11 @@ class RatingButtonBox(Gtk.Box):
             self.pack_start(rating_button, False, False, 1)
 
     @property
-    def rating(self):
+    def rating(self) -> int:
         return self._rating
 
     @rating.setter
-    def rating(self, rating):
+    def rating(self, rating: int):
         """
         Update the UI to reflect a new rating
         """
@@ -97,5 +97,4 @@ class RatingButtonBox(Gtk.Box):
 
     def _on_rating_clicked(self, button: IconButton, rating: int):
         # TODO: Call sublime_music.adapters.subsonic.adapter.SubsonicAdapter.set_rating
-        print("Clicked on ", rating)
         self.emit("rating-clicked", rating)
