@@ -698,6 +698,12 @@ class Adapter(abc.ABC):
     def set_rating(self, item_id: str, rating: int):
         """
         Rate the given item (can be song, album, artist, etc.)
+
+        Calls the endpoint described in http://www.subsonic.org/pages/api.jsp#setRating
+
+        :param item_id: A string which uniquely identifies the file (song) or folder (album/artist)
+                          to rate.
+        :param rating: The rating between 1 and 5 (inclusive), or 0 to remove the rating.
         """
         raise self._check_can_error("set_rating")
 

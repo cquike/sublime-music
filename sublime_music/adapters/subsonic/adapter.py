@@ -746,15 +746,6 @@ class SubsonicAdapter(Adapter):
         return self._get_json(self._make_url("getPlayQueue")).play_queue
 
     def set_rating(self, item_id: str, rating: int):
-        """
-        Sets the rating for a music file.
-
-        Calls the endpoint described in http://www.subsonic.org/pages/api.jsp#setRating
-
-        :param item_id: A string which uniquely identifies the file (song) or folder (album/artist)
-                          to rate.
-        :param rating: The rating between 1 and 5 (inclusive), or 0 to remove the rating.
-        """
         return self._get_json(self._make_url("setRating"), id=item_id, rating=rating)
 
     def save_play_queue(
