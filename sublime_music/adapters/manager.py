@@ -805,12 +805,8 @@ class AdapterManager:
 
     @staticmethod
     def set_rating(item_id: str, rating: int):
-        # TODO: Use async for this
         assert AdapterManager._instance
-        ground_truth_adapter = AdapterManager._instance.ground_truth_adapter
-        if AdapterManager._offline_mode and ground_truth_adapter.is_networked:
-            raise AssertionError("You cannot rate in offline mode")
-        ground_truth_adapter.set_rating(item_id, rating)
+        AdapterManager._create_ground_truth_result("set_rating", item_id, rating)
 
     @staticmethod
     def _get_networked_scheme() -> str:
