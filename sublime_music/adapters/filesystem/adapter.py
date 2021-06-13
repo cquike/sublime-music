@@ -802,7 +802,6 @@ class FilesystemAdapter(CachingAdapter):
                     "year",
                     "duration",
                     "parent_id",
-                    "user_rating",
                 ],
             )
             song_data["genre"] = (
@@ -838,6 +837,9 @@ class FilesystemAdapter(CachingAdapter):
                 if api_song.path
                 else None
             )
+
+            # peewee ignores `None` value and keeps old value
+            song_data["user_rating"] = api_song.user_rating or 0
 
             song, created = models.Song.get_or_create(
                 id=song_data["id"], defaults=song_data
