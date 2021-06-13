@@ -47,7 +47,6 @@ class RatingButtonBox(Gtk.Box):
         icon_rated: str = "star-full",
         icon_hover: str = "half-empty-star",
         icon_unrated: str = "star-empty",
-        icon_unset_rating: str = "star-crossed",
         **kwargs
     ):
         kwargs["orientation"] = kwargs.get("orientation", Gtk.Orientation.HORIZONTAL)
@@ -59,13 +58,6 @@ class RatingButtonBox(Gtk.Box):
         # Icons to use for the rating indicators/buttons
         self.icon_rated = icon_rated
         self.icon_unrated = icon_unrated
-        self.icon_unset_rating = icon_unset_rating
-
-        # The button to remove the rating / set to 0
-        self.rating_button_unrate = IconButton(self.icon_unset_rating)
-        # self.rating_button_unrate.set_action_name(f"{action_prefix}.unrate")
-        self.rating_button_unrate.connect("clicked", self._on_rating_clicked, 0)
-        self.pack_start(self.rating_button_unrate, False, False, 5)
 
         self._buttons = []
         for i in range(1, self.MAX_VALUE + 1):
@@ -96,5 +88,5 @@ class RatingButtonBox(Gtk.Box):
             raise ValueError("Must pass a value between 0 and ")
 
     def _on_rating_clicked(self, button: IconButton, rating: int):
-        # TODO: Call sublime_music.adapters.subsonic.adapter.SubsonicAdapter.set_rating
-        self.emit("rating-clicked", rating)
+        rating_to_set = 0 if self.rating == rating else rating
+        self.emit("rating-clicked", rating_to_set)
