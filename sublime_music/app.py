@@ -921,7 +921,10 @@ class SublimeMusicApp(Gtk.Application):
         if not current_song:
             return
         AdapterManager.set_rating(current_song.id, rating)
-        current_song.user_rating = rating  # TODO: This doesn't have any effect ...
+        current_song.user_rating = rating
+
+        # Force refresh of the cache with the new rating
+        AdapterManager.get_song_details(current_song.id, force=True)
         self.window.player_controls.update_rating(rating)
 
     def on_device_update(self, _, device_id: str):

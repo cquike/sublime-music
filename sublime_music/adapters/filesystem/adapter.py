@@ -794,7 +794,16 @@ class FilesystemAdapter(CachingAdapter):
         elif data_key == KEYS.SONG:
             api_song = cast(API.Song, data)
             song_data = getattrs(
-                api_song, ["id", "title", "track", "year", "duration", "parent_id"]
+                api_song,
+                [
+                    "id",
+                    "title",
+                    "track",
+                    "year",
+                    "duration",
+                    "parent_id",
+                    "user_rating",
+                ],
             )
             song_data["genre"] = (
                 self._do_ingest_new_data(KEYS.GENRE, None, g)
