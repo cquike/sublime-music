@@ -88,7 +88,7 @@ class RatingButtonBox(Gtk.Box):
 
         for i, _button in enumerate(self._buttons, start=1):
             _button.set_icon(self.icon_rated if i <= rating else self.icon_unrated)
-
+        self._rating = rating
         self.emit("rating-changed", rating)
 
     def validate_rating(self, rating: int):
