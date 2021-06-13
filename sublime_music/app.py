@@ -923,9 +923,13 @@ class SublimeMusicApp(Gtk.Application):
         AdapterManager.set_rating(current_song.id, rating)
         current_song.user_rating = rating
 
+        def post_refresh_callback(*args):
+            self.window.player_controls.update_rating(rating)
+
         # Force refresh of the cache with the new rating
-        AdapterManager.get_song_details(current_song.id, force=True)
-        self.window.player_controls.update_rating(rating)
+        AdapterManager.get_song_details(current_song.id, force=True).add_done_callback(
+            post_refresh_callback
+        )
 
     def on_device_update(self, _, device_id: str):
         assert self.player_manager
