@@ -804,9 +804,9 @@ class AdapterManager:
         return AdapterManager._ground_truth_can_do("set_rating")
 
     @staticmethod
-    def set_rating(item_id: str, rating: int):
+    def set_rating(item_id: str, rating: int) -> Result[None]:
         assert AdapterManager._instance
-        AdapterManager._create_ground_truth_result("set_rating", item_id, rating)
+        return AdapterManager._create_ground_truth_result("set_rating", item_id, rating)
 
     @staticmethod
     def _get_networked_scheme() -> str:
