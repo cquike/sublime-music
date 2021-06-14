@@ -173,7 +173,7 @@ class PlayerControls(Gtk.ActionBar):
                 app_config.state.current_song.cover_art,
                 order_token=self.cover_art_update_order_token,
             )
-            self.update_rating(app_config.state.current_song.user_rating or 0)
+            self.update_rating(app_config.state.current_song.user_rating)
 
             self.song_title.set_markup(
                 bleach.clean(app_config.state.current_song.title)
