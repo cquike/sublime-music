@@ -326,7 +326,7 @@ class SubsonicAdapter(Adapter):
     can_get_song_file_uri = True
     can_get_song_stream_uri = True
     can_scrobble_song = True
-    can_set_rating = True
+    can_set_song_rating = True
     can_search = True
     can_stream = True
     can_update_playlist = True
@@ -745,8 +745,8 @@ class SubsonicAdapter(Adapter):
     def get_play_queue(self) -> Optional[API.PlayQueue]:
         return self._get_json(self._make_url("getPlayQueue")).play_queue
 
-    def set_rating(self, item_id: str, rating: int):
-        self._get_json(self._make_url("setRating"), id=item_id, rating=rating)
+    def set_song_rating(self, song_id: str, rating: int):
+        self._get_json(self._make_url("setRating"), id=song_id, rating=rating)
 
     def save_play_queue(
         self,

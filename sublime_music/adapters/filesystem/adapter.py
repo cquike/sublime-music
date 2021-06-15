@@ -874,6 +874,11 @@ class FilesystemAdapter(CachingAdapter):
                 filename.parent.mkdir(parents=True, exist_ok=True)
                 shutil.copy(str(buffer_filename), str(filename))
 
+        elif data_key == KEYS.SONG_RATING:
+            song = models.Song.get_by_id(param)
+            song.rating = data
+            song.save()
+
         cache_info.save()
         return return_val if return_val is not None else cache_info
 

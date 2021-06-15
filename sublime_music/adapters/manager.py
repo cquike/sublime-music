@@ -800,13 +800,25 @@ class AdapterManager:
             )
 
     @staticmethod
-    def can_set_rating() -> bool:
-        return AdapterManager._ground_truth_can_do("set_rating")
+    def can_set_song_rating() -> bool:
+        return AdapterManager._ground_truth_can_do("set_song_rating")
 
     @staticmethod
-    def set_rating(item_id: str, rating: int) -> Result[None]:
+    def set_song_rating(song: Song, rating: int) -> Result[None]:
         assert AdapterManager._instance
-        return AdapterManager._create_ground_truth_result("set_rating", item_id, rating)
+        result = AdapterManager._create_ground_truth_result(
+            "set_song_rating", song.id, rating
+        )
+        if AdapterManager._instance.caching_adapter:
+
+            def call_back(_):
+                song.user_rating = rating
+                AdapterManager._instance.caching_adapter.ingest_new_data(
+                    CachingAdapter.CachedDataKey.SONG_RATING, song.id, rating
+                )
+
+            result.add_done_callback(call_back)
+        return result
 
     @staticmethod
     def _get_networked_scheme() -> str:
