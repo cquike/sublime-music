@@ -43,11 +43,9 @@ class RatingButtonBox(Gtk.Box):
 
     def __init__(
         self,
-        action_prefix: str,
         icon_rated: str = "star-full",
-        icon_hover: str = "half-empty-star",
         icon_unrated: str = "star-empty",
-        **kwargs
+        **kwargs,
     ):
         kwargs["orientation"] = kwargs.get("orientation", Gtk.Orientation.HORIZONTAL)
         super().__init__(**kwargs)
@@ -62,7 +60,6 @@ class RatingButtonBox(Gtk.Box):
         self._buttons = []
         for i in range(1, self.MAX_VALUE + 1):
             rating_button = RatingButton(self.icon_unrated)
-            # rating_button.set_action_name(f"{action_prefix}.rate-{i}")
             rating_button.connect("clicked", self._on_rating_clicked, i)
             self._buttons.append(rating_button)
             self.pack_start(rating_button, False, False, 1)

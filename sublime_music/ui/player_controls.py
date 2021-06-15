@@ -674,7 +674,7 @@ class PlayerControls(Gtk.ActionBar):
 
     def create_rating_buttons(self):
         # Rating button
-        self.rating_buttons_box = RatingButtonBox("player")
+        self.rating_buttons_box = RatingButtonBox()
         self.rating_buttons_box.set_property("sensitive", True)
         self.rating_buttons_box.connect("rating-clicked", self.on_rating_clicked)
 
