@@ -43,7 +43,7 @@ class PlayerControls(Gtk.ActionBar):
     editing: bool = False
     editing_play_queue_song_list: bool = False
     reordering_play_queue_song_list: bool = False
-    current_song = None  # TODO: Not used?
+    current_song = None
     current_device = None
     current_playing_index: Optional[int] = None
     current_play_queue: Tuple[str, ...] = ()
