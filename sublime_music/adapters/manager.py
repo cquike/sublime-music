@@ -811,13 +811,20 @@ class AdapterManager:
         )
         if AdapterManager._instance.caching_adapter:
 
-            def call_back(_):
+            def on_done(future: Future):
+                """
+                Update cache when things went well
+
+                The API call doesn't return the updated object
+                """
+                if future.cancelled() or future.exception(timeout=1.0):
+                    return
                 song.user_rating = rating
                 AdapterManager._instance.caching_adapter.ingest_new_data(
                     CachingAdapter.CachedDataKey.SONG_RATING, song.id, rating
                 )
 
-            result.add_done_callback(call_back)
+            result.add_done_callback(on_done)
         return result
 
     @staticmethod

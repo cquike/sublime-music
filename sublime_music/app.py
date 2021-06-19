@@ -3,6 +3,7 @@ import os
 import random
 import shutil
 import sys
+from concurrent.futures import Future
 from datetime import timedelta
 from functools import partial
 from pathlib import Path
@@ -921,13 +922,22 @@ class SublimeMusicApp(Gtk.Application):
         if not current_song:
             return
 
-        def post_refresh_callback(*args):
-            self.window.player_controls.update_rating(rating)
+        def on_done(future: Future):
+            """Make we update the UI after a failed or successful rating"""
+            if future.cancelled():
+                return
+            exception = future.exception(timeout=1.0)
+            if exception:
+                self.app_config.state.current_notification = UIState.UINotification(
+                    markup=f"<b>Unable to rate {current_song.title}.</b>",
+                    icon="dialog-error",
+                )
+                self.update_window()
+            else:
+                self.window.player_controls.update_rating(rating)
 
         current_song.user_rating = rating
-        AdapterManager.set_song_rating(current_song, rating).add_done_callback(
-            post_refresh_callback
-        )
+        AdapterManager.set_song_rating(current_song, rating).add_done_callback(on_done)
 
     def on_device_update(self, _, device_id: str):
         assert self.player_manager
