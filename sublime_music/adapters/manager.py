@@ -809,7 +809,7 @@ class AdapterManager:
         result = AdapterManager._create_ground_truth_result(
             "set_song_rating", song.id, rating
         )
-        if AdapterManager._instance.caching_adapter:
+        if AdapterManager._instance and AdapterManager._instance.caching_adapter:
 
             def on_done(future: Future):
                 """
@@ -819,6 +819,10 @@ class AdapterManager:
                 """
                 if future.cancelled() or future.exception(timeout=1.0):
                     return
+                # To make mypy happy
+                assert AdapterManager._instance
+                assert AdapterManager._instance.caching_adapter
+
                 song.user_rating = rating
                 AdapterManager._instance.caching_adapter.ingest_new_data(
                     CachingAdapter.CachedDataKey.SONG_RATING, song.id, rating

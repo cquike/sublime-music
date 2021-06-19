@@ -929,11 +929,11 @@ class SublimeMusicApp(Gtk.Application):
             exception = future.exception(timeout=1.0)
             if exception:
                 self.app_config.state.current_notification = UIState.UINotification(
-                    markup=f"<b>Unable to rate {current_song.title}.</b>",
+                    markup="<b>Unable to rate song.</b>",
                     icon="dialog-error",
                 )
                 self.update_window()
-            else:
+            elif self.window:
                 self.window.player_controls.update_rating(rating)
 
         current_song.user_rating = rating
