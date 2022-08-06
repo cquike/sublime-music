@@ -192,7 +192,7 @@ class Song(BaseModel):
     track = IntegerField(null=True)
     disc_number = IntegerField(null=True)
     year = IntegerField(null=True)
-    user_rating = IntegerField(null=True)
+    user_rating = IntegerField()
     starred = TzDateTimeField(null=True)
 
 

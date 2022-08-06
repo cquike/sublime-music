@@ -10,6 +10,7 @@ from gi.repository import Gdk, GdkPixbuf, GLib, GObject, Gtk, Pango
 
 from . import util
 from .common import IconButton, IconToggleButton, SpinnerImage
+from .common.rating_button import RatingButtonBox
 from .state import RepeatType
 from ..adapters import AdapterManager, Result, SongCacheStatus
 from ..adapters.api_objects import Song
@@ -31,6 +32,7 @@ class PlayerControls(Gtk.ActionBar):
             GObject.TYPE_NONE,
             (int, object, object),
         ),
+        "song-rated": (GObject.SignalFlags.RUN_FIRST, GObject.TYPE_NONE, (int,)),
         "songs-removed": (GObject.SignalFlags.RUN_FIRST, GObject.TYPE_NONE, (object,)),
         "refresh-window": (
             GObject.SignalFlags.RUN_FIRST,
@@ -56,10 +58,12 @@ class PlayerControls(Gtk.ActionBar):
         song_display = self.create_song_display()
         playback_controls = self.create_playback_controls()
         play_queue_volume = self.create_play_queue_volume()
+        self.create_rating_buttons()
 
         self.last_device_list_update = None
 
         self.pack_start(song_display)
+        self.pack_start(self.rating_buttons_box)
         self.set_center_widget(playback_controls)
         self.pack_end(play_queue_volume)
 
@@ -169,6 +173,7 @@ class PlayerControls(Gtk.ActionBar):
                 app_config.state.current_song.cover_art,
                 order_token=self.cover_art_update_order_token,
             )
+            self.update_rating(app_config.state.current_song.user_rating)
 
             self.song_title.set_markup(
                 bleach.clean(app_config.state.current_song.title)
@@ -360,6 +365,12 @@ class PlayerControls(Gtk.ActionBar):
 
         self.album_art.set_from_file(cover_art_filename)
         self.album_art.set_loading(False)
+
+    def update_rating(self, rating: int):
+        self.rating_buttons_box.rating = rating
+
+    def on_rating_clicked(self, _, rating: int):
+        self.emit("song-rated", rating)
 
     def update_scrubber(
         self,
@@ -660,6 +671,12 @@ class PlayerControls(Gtk.ActionBar):
         box.add(buttons)
 
         return box
+
+    def create_rating_buttons(self):
+        # Rating button
+        self.rating_buttons_box = RatingButtonBox()
+        self.rating_buttons_box.set_property("sensitive", True)
+        self.rating_buttons_box.connect("rating-clicked", self.on_rating_clicked)
 
     def create_play_queue_volume(self) -> Gtk.Box:
         vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)

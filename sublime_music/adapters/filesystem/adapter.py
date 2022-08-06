@@ -794,7 +794,16 @@ class FilesystemAdapter(CachingAdapter):
         elif data_key == KEYS.SONG:
             api_song = cast(API.Song, data)
             song_data = getattrs(
-                api_song, ["id", "title", "track", "year", "duration", "parent_id"]
+                api_song,
+                [
+                    "id",
+                    "title",
+                    "track",
+                    "year",
+                    "duration",
+                    "parent_id",
+                    "user_rating",
+                ],
             )
             song_data["genre"] = (
                 self._do_ingest_new_data(KEYS.GENRE, None, g)
@@ -864,6 +873,11 @@ class FilesystemAdapter(CachingAdapter):
                 filename = self._compute_song_filename(cache_info)
                 filename.parent.mkdir(parents=True, exist_ok=True)
                 shutil.copy(str(buffer_filename), str(filename))
+
+        elif data_key == KEYS.SONG_RATING:
+            song = models.Song.get_by_id(param)
+            song.rating = data
+            song.save()
 
         cache_info.save()
         return return_val if return_val is not None else cache_info

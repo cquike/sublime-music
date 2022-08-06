@@ -480,6 +480,13 @@ class Adapter(abc.ABC):
         """
         return False
 
+    @property
+    def can_set_song_rating(self) -> bool:
+        """
+        Whether or not the adapter supports :class:`set_song_rating`.
+        """
+        return False
+
     # Artists
     @property
     def supported_artist_query_types(self) -> Set[AlbumSearchQuery.Type]:
@@ -688,6 +695,17 @@ class Adapter(abc.ABC):
         """
         raise self._check_can_error("scrobble_song")
 
+    def set_song_rating(self, song_id: str, rating: int):
+        """
+        Rate the given song
+
+        Calls the endpoint described in http://www.subsonic.org/pages/api.jsp#setRating
+
+        :param song_id: A string which uniquely identifies the file (song)
+        :param rating: The rating between 1 and 5 (inclusive), or 0 to remove the rating
+        """
+        raise self._check_can_error("set_song_rating")
+
     def get_artists(self) -> Sequence[Artist]:
         """
         Get a list of all of the artists known to the adapter.
@@ -859,6 +877,7 @@ class CachingAdapter(Adapter):
         SONG = "song"
         SONG_FILE = "song_file"
         SONG_FILE_PERMANENT = "song_file_permanent"
+        SONG_RATING = "song_rating"
 
         # These are only for clearing the cache, and will only do deletion
         ALL_SONGS = "all_songs"
