@@ -124,6 +124,23 @@ class SublimeMusicApp(Gtk.Application):
             self.window.present()
             return
 
+        # Load the state for the server, if it exists.
+        self.app_config.load_state()
+
+        # If there is no current provider, use the first one if there are any
+        # configured, and if none are configured, then show the dialog to create a new
+        # one.
+        if self.app_config.provider is None:
+            if len(self.app_config.providers) == 0:
+                self.show_configure_servers_dialog()
+
+                # If they didn't add one with the dialog, close the window.
+                if len(self.app_config.providers) == 0:
+                    self.window.close()
+                    return
+
+        AdapterManager.reset(self.app_config, self.on_song_download_progress)
+
         # Configure Icons
         default_icon_theme = Gtk.IconTheme.get_default()
         for adapter in AdapterManager.available_adapters:
@@ -148,23 +165,6 @@ class SublimeMusicApp(Gtk.Application):
 
         self.window.show_all()
         self.window.present()
-
-        # Load the state for the server, if it exists.
-        self.app_config.load_state()
-
-        # If there is no current provider, use the first one if there are any
-        # configured, and if none are configured, then show the dialog to create a new
-        # one.
-        if self.app_config.provider is None:
-            if len(self.app_config.providers) == 0:
-                self.show_configure_servers_dialog()
-
-                # If they didn't add one with the dialog, close the window.
-                if len(self.app_config.providers) == 0:
-                    self.window.close()
-                    return
-
-        AdapterManager.reset(self.app_config, self.on_song_download_progress)
 
         # Connect after we know there's a server configured.
         self.window.stack.connect("notify::visible-child", self.on_stack_change)
