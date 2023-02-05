@@ -678,10 +678,8 @@ class Adapter(abc.ABC):
         """
         Rate the given song
 
-        Calls the endpoint described in http://www.subsonic.org/pages/api.jsp#setRating
-
         :param song_id: A string which uniquely identifies the file (song)
-        :param rating: The rating between 1 and 5 (inclusive), or 0 to remove the rating
+        :param rating: The rating between 1 and 5 (inclusive), or None to remove the rating
         """
         raise self._check_can_error("set_song_rating")
 

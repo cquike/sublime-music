@@ -96,7 +96,7 @@ class Song(abc.ABC):
     year: Optional[int]
     cover_art: Optional[str]
     size: Optional[int]
-    user_rating: int
+    user_rating: Optional[int]
     starred: Optional[datetime]
 
 

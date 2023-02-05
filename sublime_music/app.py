@@ -175,9 +175,10 @@ class SublimeMusicApp(Gtk.Application):
         self.window.connect("go-to", self.on_window_go_to)
         self.window.connect("key-press-event", self.on_window_key_press)
         self.window.player_controls.connect("song-scrub", self.on_song_scrub)
-        self.window.player_controls.connect("song-rated", self.on_current_song_rated)
         self.window.player_controls.connect("device-update", self.on_device_update)
         self.window.player_controls.connect("volume-change", self.on_volume_change)
+        if AdapterManager.can_set_song_rating():
+            self.window.player_controls.connect("song-rated", self.on_current_song_rated)
 
         # Configure the players
         self.last_play_queue_update = timedelta(0)
@@ -879,7 +880,7 @@ class SublimeMusicApp(Gtk.Application):
             return
 
         def on_done(future: Future):
-            """Make we update the UI after a failed or successful rating"""
+            """Update the UI after a failed or successful rating"""
             if future.cancelled():
                 return
             exception = future.exception(timeout=1.0)

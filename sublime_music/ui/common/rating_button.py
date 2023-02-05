@@ -52,7 +52,7 @@ class RatingButtonBox(Gtk.Box):
         self.set_css_name("ratingbuttonbox")
         self.set_property("valign", Gtk.Align.CENTER)
         self.set_property("halign", Gtk.Align.CENTER)
-        self._rating: int = 0
+        self._rating: int = None
 
         # Icons to use for the rating indicators/buttons
         self.icon_rated = icon_rated
@@ -77,14 +77,14 @@ class RatingButtonBox(Gtk.Box):
         self.validate_rating(rating)
 
         for i, _button in enumerate(self._buttons, start=1):
-            _button.set_icon(self.icon_rated if i <= rating else self.icon_unrated)
+            _button.set_icon(self.icon_rated if i <= rating or rating is None else self.icon_unrated)
         self._rating = rating
         self.emit("rating-changed", rating)
 
     def validate_rating(self, rating: int):
-        if 0 >= rating > self.MAX_VALUE:
-            raise ValueError("Must pass a value between 0 and ")
+        if rating is not None and 1 >= rating > self.MAX_VALUE:
+            raise ValueError("Must pass a value between 1 and "+str(self.MAX_VALUE))
 
     def _on_rating_clicked(self, button: IconButton, rating: int):
-        rating_to_set = 0 if self.rating == rating else rating
+        rating_to_set = None if self.rating == rating else rating
         self.emit("rating-clicked", rating_to_set)

@@ -53,7 +53,8 @@ class PlayerControls(Gtk.ActionBar):
         Gtk.ActionBar.__init__(self)
         self.set_name("player-controls-bar")
 
-        self.create_rating_buttons()
+        if AdapterManager.can_set_song_rating():
+            self.create_rating_buttons()
         song_display = self.create_song_display()
         playback_controls = self.create_playback_controls()
         rating_play_queue_volume = self.create_rating_play_queue_volume()
@@ -61,7 +62,6 @@ class PlayerControls(Gtk.ActionBar):
         self.last_device_list_update = None
 
         self.pack_start(song_display)
-        self.pack_start(self.rating_buttons_box)
         self.set_center_widget(playback_controls)
         self.pack_end(rating_play_queue_volume)
 
@@ -161,7 +161,8 @@ class PlayerControls(Gtk.ActionBar):
                 app_config.state.current_song.cover_art,
                 order_token=self.cover_art_update_order_token,
             )
-            self.update_rating(app_config.state.current_song.user_rating)
+            if AdapterManager.can_set_song_rating():
+                self.update_rating(app_config.state.current_song.user_rating)
 
             self.song_title.set_markup(bleach.clean(app_config.state.current_song.title))
             # TODO (#71): use walrus once MYPY gets its act together
@@ -821,7 +822,8 @@ class PlayerControls(Gtk.ActionBar):
         self.volume_slider.connect("value-changed", self.on_volume_change)
         box.pack_start(self.volume_slider, True, True, 0)
 
-        vbox.pack_start(self.rating_buttons_box, False, True, 0)
+        if AdapterManager.can_set_song_rating():
+            vbox.pack_start(self.rating_buttons_box, False, True, 0)
         vbox.pack_start(box, False, True, 0)
         vbox.pack_start(Gtk.Box(), True, True, 0)
         return vbox
