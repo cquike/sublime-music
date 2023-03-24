@@ -29,11 +29,11 @@ click==8.1.3
     # via
     #   black
     #   pip-tools
-coverage[toml]==7.0.1
+coverage[toml]==7.0.2
     # via pytest-cov
 dataclasses-json==0.5.7
     # via sublime_music (pyproject.toml)
-deepdiff==6.2.2
+deepdiff==6.2.3
     # via sublime_music (pyproject.toml)
 distlib==0.3.6
     # via virtualenv
@@ -58,7 +58,7 @@ flake8==6.0.0
     #   sublime_music (pyproject.toml)
 flake8-annotations==2.9.1
     # via sublime_music (pyproject.toml)
-flake8-bugbear==22.12.6
+flake8-bugbear==23.1.20
     # via sublime_music (pyproject.toml)
 flake8-comprehensions==3.10.1
     # via sublime_music (pyproject.toml)
@@ -107,7 +107,7 @@ nodeenv==1.7.0
     # via pre-commit
 ordered-set==4.1.0
     # via deepdiff
-packaging==22.0
+packaging==23.0
     # via
     #   build
     #   marshmallow
@@ -161,7 +161,7 @@ pyyaml==6.0
     # via pre-commit
 rapidfuzz==2.13.7
     # via levenshtein
-requests==2.28.1
+requests==2.28.2
     # via
     #   flit
     #   sphinx
@@ -185,7 +185,7 @@ sphinx==4.5.0
     #   sublime_music (pyproject.toml)
 sphinx-rtd-theme==1.1.1
     # via sublime_music (pyproject.toml)
-sphinxcontrib-applehelp==1.0.2
+sphinxcontrib-applehelp==1.0.3
     # via sphinx
 sphinxcontrib-devhelp==1.0.2
     # via sphinx
@@ -197,7 +197,7 @@ sphinxcontrib-qthelp==1.0.3
     # via sphinx
 sphinxcontrib-serializinghtml==1.1.5
     # via sphinx
-termcolor==2.1.1
+termcolor==2.2.0
     # via sublime_music (pyproject.toml)
 thefuzz @ git+https://github.com/seatgeek/thefuzz@6e68af84e086b3e5f7253d4f9b0d6c7313e34637
     # via sublime_music (pyproject.toml)
