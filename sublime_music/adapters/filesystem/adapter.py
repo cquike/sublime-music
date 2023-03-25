@@ -105,6 +105,7 @@ class FilesystemAdapter(CachingAdapter):
     can_get_cover_art_uri = True
     can_get_song_file_uri = True
     can_get_song_details = True
+    can_get_song_rating = True
     can_get_artist = True
     can_get_albums = True
     can_get_album = True
@@ -136,6 +137,10 @@ class FilesystemAdapter(CachingAdapter):
     @property
     def can_get_genres(self) -> bool:
         return self._can_get_key(KEYS.GENRES)
+
+    @property
+    def can_set_song_rating(self) -> bool:
+        return self._can_get_key(KEYS.SONG_RATING)
 
     supported_schemes = ("file",)
     supported_artist_query_types = {

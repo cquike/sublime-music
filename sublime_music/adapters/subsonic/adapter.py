@@ -316,8 +316,8 @@ class SubsonicAdapter(Adapter):
     can_get_song_details = True
     can_get_song_file_uri = True
     can_get_song_stream_uri = True
+    can_get_song_rating = True
     can_scrobble_song = True
-    can_set_song_rating = True
     can_search = True
     can_stream = True
     can_update_playlist = True
@@ -339,6 +339,10 @@ class SubsonicAdapter(Adapter):
     @property
     def can_save_play_queue(self) -> bool:
         return self.version_at_least("1.12.0")
+
+    @property
+    def can_set_song_rating(self) -> bool:
+        return self.version_at_least("1.6.0")
 
     _schemes = None
 

@@ -460,6 +460,13 @@ class Adapter(abc.ABC):
         return False
 
     @property
+    def can_get_song_rating(self) -> bool:
+        """
+        Whether or not the adapter supports :class:`get_song_rating`.
+        """
+        return False
+
+    @property
     def can_set_song_rating(self) -> bool:
         """
         Whether or not the adapter supports :class:`set_song_rating`.

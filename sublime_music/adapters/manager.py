@@ -636,6 +636,14 @@ class AdapterManager:
         return AdapterManager._ground_truth_can_do("get_song_stream_uri")
 
     @staticmethod
+    def can_get_song_rating() -> bool:
+        return AdapterManager._ground_truth_can_do("get_song_rating")
+
+    @staticmethod
+    def can_set_song_rating() -> bool:
+        return AdapterManager._ground_truth_can_do("set_song_rating")
+
+    @staticmethod
     def can_batch_download_songs() -> bool:
         # We can only download from the ground truth adapter.
         return AdapterManager._ground_truth_can_do("get_song_file_uri")
@@ -768,10 +776,6 @@ class AdapterManager:
             AdapterManager._instance.caching_adapter.delete_data(
                 CachingAdapter.CachedDataKey.PLAYLIST_DETAILS, playlist_id
             )
-
-    @staticmethod
-    def can_set_song_rating() -> bool:
-        return AdapterManager._ground_truth_can_do("set_song_rating")
 
     @staticmethod
     def set_song_rating(song: Song, rating: int | None) -> Result[None]:

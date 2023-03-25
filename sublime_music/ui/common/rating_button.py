@@ -19,6 +19,8 @@ from gi.repository import GObject, Gtk
 
 from sublime_music.ui.common import IconButton
 
+from sublime_music.adapters import AdapterManager
+
 from typing import Optional
 
 class RatingButton(IconButton):
@@ -88,9 +90,10 @@ class RatingButtonBox(Gtk.Box):
             raise ValueError("Must pass a value between 1 and "+str(self.MAX_VALUE))
 
     def _on_rating_clicked(self, button: IconButton, rating: int):
-        if self.rating == rating:
-            self.rating = None
-            self.emit("rating-remove")
-        else:
-            self.rating = rating
-            self.emit("rating-clicked", rating)
+        if AdapterManager.can_set_song_rating():
+            if self.rating == rating:
+                self.rating = None
+                self.emit("rating-remove")
+            else:
+                self.rating = rating
+                self.emit("rating-clicked", rating)

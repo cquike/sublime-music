@@ -177,8 +177,7 @@ class SublimeMusicApp(Gtk.Application):
         self.window.player_controls.connect("song-scrub", self.on_song_scrub)
         self.window.player_controls.connect("device-update", self.on_device_update)
         self.window.player_controls.connect("volume-change", self.on_volume_change)
-        if AdapterManager.can_set_song_rating():
-            self.window.player_controls.connect("song-rated", self.on_current_song_rated)
+        self.window.player_controls.connect("song-rated", self.on_current_song_rated)
 
         # Configure the players
         self.last_play_queue_update = timedelta(0)
