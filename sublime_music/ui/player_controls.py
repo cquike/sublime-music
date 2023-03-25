@@ -30,7 +30,7 @@ class PlayerControls(Gtk.ActionBar):
             GObject.TYPE_NONE,
             (int, object, object),
         ),
-        "song-rated": (GObject.SignalFlags.RUN_FIRST, GObject.TYPE_NONE, (int,)),
+        "song-rated": (GObject.SignalFlags.RUN_FIRST, GObject.TYPE_NONE, ()),
         "songs-removed": (GObject.SignalFlags.RUN_FIRST, GObject.TYPE_NONE, (object,)),
         "refresh-window": (
             GObject.SignalFlags.RUN_FIRST,
@@ -349,11 +349,14 @@ class PlayerControls(Gtk.ActionBar):
         self.album_art.set_from_file(cover_art_filename)
         self.album_art.set_loading(False)
 
-    def update_rating(self, rating: int):
+    def update_rating(self, rating: int | None):
         self.rating_buttons_box.rating = rating
 
     def on_rating_clicked(self, _, rating: int):
-        self.emit("song-rated", rating)
+        self.emit("song-rated")
+
+    def on_rating_removed(self, _):
+        self.emit("song-rated")
 
     def update_scrubber(
         self,
@@ -646,6 +649,7 @@ class PlayerControls(Gtk.ActionBar):
         self.rating_buttons_box = RatingButtonBox()
         self.rating_buttons_box.set_property("sensitive", True)
         self.rating_buttons_box.connect("rating-clicked", self.on_rating_clicked)
+        self.rating_buttons_box.connect("rating-remove", self.on_rating_removed)
 
     def create_rating_play_queue_volume(self) -> Gtk.Box:
         vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)

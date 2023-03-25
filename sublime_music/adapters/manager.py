@@ -774,7 +774,7 @@ class AdapterManager:
         return AdapterManager._ground_truth_can_do("set_song_rating")
 
     @staticmethod
-    def set_song_rating(song: Song, rating: int) -> Result[None]:
+    def set_song_rating(song: Song, rating: int | None) -> Result[None]:
         assert AdapterManager._instance
         result = AdapterManager._create_ground_truth_result("set_song_rating", song.id, rating)
         if AdapterManager._instance and AdapterManager._instance.caching_adapter:

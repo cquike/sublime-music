@@ -674,7 +674,7 @@ class Adapter(abc.ABC):
         """
         raise self._check_can_error("scrobble_song")
 
-    def set_song_rating(self, song_id: str, rating: int):
+    def set_song_rating(self, song_id: str, rating: int | None):
         """
         Rate the given song
 

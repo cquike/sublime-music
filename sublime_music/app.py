@@ -874,7 +874,8 @@ class SublimeMusicApp(Gtk.Application):
 
         self.save_play_queue()
 
-    def on_current_song_rated(self, _, rating: int):
+    def on_current_song_rated(self, _):
+        rating = self.window.player_controls.rating_buttons_box.rating
         current_song = self.app_config.state.current_song
         if not current_song:
             return

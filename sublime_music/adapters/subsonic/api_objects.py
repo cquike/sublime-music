@@ -187,7 +187,7 @@ class Song(SublimeAPI.Song, DataClassJsonMixin):
     year: Optional[int] = None
     size: Optional[int] = None
     cover_art: Optional[str] = None
-    user_rating: int = 0
+    user_rating: Optional[int] = None
     starred: Optional[datetime] = None
 
     def __post_init__(self):

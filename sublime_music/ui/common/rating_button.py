@@ -19,6 +19,7 @@ from gi.repository import GObject, Gtk
 
 from sublime_music.ui.common import IconButton
 
+from typing import Optional
 
 class RatingButton(IconButton):
     def __init__(self, *args, **kwargs):
@@ -35,9 +36,10 @@ class RatingButtonBox(Gtk.Box):
 
     __gsignals__ = {
         # The rating has been set and is reflected in the UI
-        "rating-changed": (GObject.SignalFlags.RUN_FIRST, GObject.TYPE_NONE, (int,)),
+        "rating-changed": (GObject.SignalFlags.RUN_FIRST, GObject.TYPE_NONE, ()),
         # It has just been clicked, but no rating has been set
         "rating-clicked": (GObject.SignalFlags.RUN_FIRST, GObject.TYPE_NONE, (int,)),
+        "rating-remove": (GObject.SignalFlags.RUN_FIRST, GObject.TYPE_NONE, ()),
     }
     MAX_VALUE = 5
 
@@ -52,7 +54,7 @@ class RatingButtonBox(Gtk.Box):
         self.set_css_name("ratingbuttonbox")
         self.set_property("valign", Gtk.Align.CENTER)
         self.set_property("halign", Gtk.Align.CENTER)
-        self._rating: int = None
+        self._rating: int | None = None
 
         # Icons to use for the rating indicators/buttons
         self.icon_rated = icon_rated
@@ -66,25 +68,29 @@ class RatingButtonBox(Gtk.Box):
             self.pack_start(rating_button, False, False, 1)
 
     @property
-    def rating(self) -> int:
+    def rating(self) -> int | None:
         return self._rating
 
     @rating.setter
-    def rating(self, rating: int):
+    def rating(self, rating: int | None):
         """
         Update the UI to reflect a new rating
         """
         self.validate_rating(rating)
 
         for i, _button in enumerate(self._buttons, start=1):
-            _button.set_icon(self.icon_rated if i <= rating or rating is None else self.icon_unrated)
+            _button.set_icon(self.icon_rated if rating is not None and i <= rating else self.icon_unrated)
         self._rating = rating
-        self.emit("rating-changed", rating)
+        self.emit("rating-changed")
 
-    def validate_rating(self, rating: int):
+    def validate_rating(self, rating: int | None):
         if rating is not None and 1 >= rating > self.MAX_VALUE:
             raise ValueError("Must pass a value between 1 and "+str(self.MAX_VALUE))
 
     def _on_rating_clicked(self, button: IconButton, rating: int):
-        rating_to_set = None if self.rating == rating else rating
-        self.emit("rating-clicked", rating_to_set)
+        if self.rating == rating:
+            self.rating = None
+            self.emit("rating-remove")
+        else:
+            self.rating = rating
+            self.emit("rating-clicked", rating)

@@ -758,8 +758,8 @@ class SubsonicAdapter(Adapter):
     def get_play_queue(self) -> Optional[API.PlayQueue]:
         return self._get_json(self._make_url("getPlayQueue")).play_queue
 
-    def set_song_rating(self, song_id: str, rating: int):
-        self._get_json(self._make_url("setRating"), id=song_id, rating=rating if rating else 0)
+    def set_song_rating(self, song_id: str, rating: int | None):
+        self._get_json(self._make_url("setRating"), id=song_id, rating=rating if rating is not None else 0)
 
     def save_play_queue(
         self,
